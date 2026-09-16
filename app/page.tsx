@@ -7,17 +7,11 @@ export const dynamic = "force-dynamic";
 
 export default async function Page() {
   let catalog: Awaited<ReturnType<typeof readCatalog>> | null = null;
-  let failure: string | null = null;
 
   try {
     catalog = await readCatalog();
-  } catch (exception) {
-    failure =
-      exception instanceof Error
-        ? exception.message
-        : "Erro desconhecido";
-
-    console.error("CATALOG_ERROR_MESSAGE:", failure);
+  } catch {
+    console.error("Falha ao carregar o catálogo da loja.");
   }
 
   if (!catalog) {
