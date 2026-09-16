@@ -28,9 +28,12 @@ export async function rpc<T>(name:string,args:Record<string,unknown>={}):Promise
   const detail=await response.json().catch(()=>({})) as {code?:string};
   if(detail.code==='PGRST202')throw new DatabaseError('Execute o SQL de integração no Supabase e tente novamente.');
   if(detail.code==='40001')throw new DatabaseError('O catálogo foi alterado em outra sessão. Recarregue antes de salvar.',409);
-  if(detail.code==='P0001')throw new DatabaseError('A operação foi recusada para proteger os dados. Confira estoque, carrinho e se o Supabase já contém produtos.',409);
-  if(response.status===401||response.status===403)throw new DatabaseError('Confira a chave secreta, as permissões e a Data API do Supabase.');
-  throw new DatabaseError('O Supabase não concluiu a operação. Nenhuma gravação parcial foi aplicada.');
+if (detail.code === "P0001") {
+  throw new DatabaseError(
+    "Estoque insuficiente. Reduza a quantidade do produto no carrinho.",
+    409,
+  );
+}  throw new DatabaseError('O Supabase não concluiu a operação. Nenhuma gravação parcial foi aplicada.');
  }
  return response.json() as Promise<T>;
 }

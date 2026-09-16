@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "cross-env WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "build": "vinext build",
+    "build": "vinext build && node scripts/ensure-wrangler-keep-vars.mjs",
     "start": "cross-env WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
